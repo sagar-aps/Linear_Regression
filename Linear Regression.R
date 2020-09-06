@@ -188,3 +188,68 @@ exp_val <- function(x,y,z_y){
 
 
 exp_val(female_heights$mother,female_heights$daughter,60)
+
+
+
+
+# calculate correlation between HR, BB and singles
+Teams %>% 
+  filter(yearID %in% 1961:2001 ) %>% 
+  mutate(Singles = (H-HR-X2B-X3B)/G, BB = BB/G, HR = HR/G) %>%  
+  summarize(cor(BB, HR), cor(Singles, HR), cor(BB,Singles))
+
+
+
+# stratify HR per game to nearest 10, filter out strata with few points
+dat <- Teams %>% filter(yearID %in% 1961:2001) %>%
+  mutate(HR_strata = round(HR/G, 1), 
+         BB_per_game = BB / G,
+         R_per_game = R / G) %>%
+  filter(HR_strata >= 0.4 & HR_strata <=1.2)
+# scatterplot for each HR stratum
+dat %>% 
+  ggplot(aes(BB_per_game, R_per_game)) +  
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  facet_wrap( ~ HR_strata)
+# calculate slope of regression line after stratifying by HR
+dat %>%  
+  group_by(HR_strata) %>%
+  summarize(slope = cor(BB_per_game, R_per_game)*sd(R_per_game)/sd(BB_per_game))
+
+
+dat %>%  
+  summarize(slope = cor(BB_per_game, R_per_game)*sd(R_per_game)/sd(BB_per_game))
+
+lm(son ~ father, data = galton_heights)
+
+?lm
+#lm(son~father) gives the intercept and the slope and intercept of the regression line.
+
+#0.493 is the slope. i.e, for every unit increase in the fathers height, sons height will increase by 0.493 units
+
+
+summary_stats <- Teams %>% 
+  filter(yearID %in% 1961:2001 ) %>%
+  mutate(HR_per_game = HR/G, R_per_game = R/G) %>%
+  summarize(avg_HR = mean(HR_per_game),
+            s_HR = sd(HR_per_game),
+            avg_R = mean(R_per_game),
+            s_R = sd(R_per_game),
+            r = cor(HR_per_game, R_per_game))
+
+reg_line <- summary_stats %>% summarize(slope = r*s_R/s_HR,
+                                        intercept = avg_R - slope*avg_HR)
+p <- Teams %>% filter(yearID %in% 1961:2001 ) %>%
+  mutate(HR_per_game = HR/G, R_per_game = R/G) %>%
+  ggplot(aes(HR_per_game, R_per_game)) + 
+  geom_point(alpha = 0.5)
+p + geom_abline(intercept = reg_line$intercept, slope = reg_line$slope)
+
+
+#We can acieve the same line by the following code
+
+p + geom_smooth(method = "lm")
+
+# the code is useful to predict the Runs per game based on the number of HRs (Home runs)
+
