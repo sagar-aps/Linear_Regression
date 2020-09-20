@@ -2,7 +2,7 @@
 title: "Selecting the Oakland Athletics baseball team for 2002"
 author: "Sagar A"
 date: "9/19/2020"
-output: html_document
+output:  rmarkdown::github_document
 ---
 
 ```{r setup, include=FALSE}
