@@ -25,8 +25,8 @@ Using these statistics, we will use Multiple Linear Regression to predict runs b
 
 We use pipes and graphics using ggplot2 so we need to load the tidyverse package.
 
-```{r , echo=FALSE}
-library(tidyverse)
+```{r }
+library(tidyverse, warn.conflicts = FALSE)
 
 ```
 
