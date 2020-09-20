@@ -146,14 +146,14 @@ players <- Batting %>% filter(yearID %in% 1999:2001) %>%
   mutate(R_hat = predict(fit,newdata = .))
 ```
 
-# plot player-specific predicted runs
+## Plot player-specific predicted runs
 ```{r}
 qplot(R_hat, data = players, geom = "histogram", binwidth = 0.5, color = I("black"))
 ```
 
 Oakland athletics has a limited budget. An important parameter of our selection model is thus, the salary of the player. In the next piece of code, we add that.
 
-# add 2002 salary of each player
+## Add 2002 salary of each player
 ```{r}
 players <- Salaries %>% 
   filter(yearID == 2002) %>%
@@ -165,7 +165,7 @@ players <- Salaries %>%
 To make a team, we need players of each playing position. 
 We can't just take run scorers if they don't have fielding skills. In the next peice of code, we add a player position to the player. However, a player might play in multiple positions through his career. We avois that complexity by choosing the maximum played at position. We are on a budget, we'd better take sure bets.
 
-# add defensive position
+## Add defensive position
 ```{r}
 position_names <- c("G_p","G_c","G_1b","G_2b","G_3b","G_ss","G_lf","G_cf","G_rf")
 tmp_tab <- Appearances %>% 
